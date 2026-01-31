@@ -15,8 +15,8 @@ import frc.robot.commands.ShooterCmd;
 public class Shooter extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   private static Shooter mInstance; 
-  private int motorID = 2;
-  private SparkMax ShooterMotor = new SparkMax(motorID, MotorType.kBrushless);      
+  private int motorID = 60;
+  private SparkMax ShooterMotor = new SparkMax(motorID, MotorType.kBrushed);      
 
   public static final Shooter getInstance() {
     if (mInstance == null) {

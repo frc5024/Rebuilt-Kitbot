@@ -15,8 +15,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class IntakeCmd extends Command {
   private final Intake m_intake;
   double speed = 0.5;
-  ShuffleboardTab tab = Shuffleboard.getTab("Shooter Motor Speed");
-  GenericEntry pEntry = tab.add("Set Shooter Speed", speed).getEntry();
   /**
 
   /**
@@ -35,7 +33,7 @@ public class IntakeCmd extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_intake.setMotorPower(pEntry.getDouble(-0.1));
+    m_intake.setMotorPower(speed);
   }
 
 

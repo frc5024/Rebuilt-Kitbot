@@ -14,9 +14,9 @@ import frc.robot.commands.IntakeCmd;
 public class Intake extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   private static Intake mInstance; 
-  private int motor1ID = 1;
+  private int motor1ID = 61;
 
-  private SparkMax IntakeMotor1 = new SparkMax(motor1ID, MotorType.kBrushless);
+  private SparkMax IntakeMotor1 = new SparkMax(motor1ID, MotorType.kBrushed);
 
   public static final Intake getInstance() {
     if (mInstance == null) {

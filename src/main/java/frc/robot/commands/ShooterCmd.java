@@ -16,8 +16,6 @@ public class ShooterCmd extends Command {
 
   private final Shooter m_shooter;
   double speed = 0.5;
-  ShuffleboardTab tab = Shuffleboard.getTab("Shooter Motor Speed");
-  GenericEntry pEntry = tab.add("Set Shooter Speed", speed).getEntry();
   /**
    * Creates a new ShooterCmd .
    *
@@ -34,7 +32,7 @@ public class ShooterCmd extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_shooter.setMotorPower(pEntry.getDouble(-0.1));
+    m_shooter.setMotorPower(speed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
