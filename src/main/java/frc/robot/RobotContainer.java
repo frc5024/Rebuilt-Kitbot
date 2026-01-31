@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import frc.robot.subsystems.Blower;
@@ -62,12 +63,17 @@ public class RobotContainer {
 
         //driver.x().onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
 
-        driver.a().whileTrue(s_Intake.getIntake(1.0));
-        driver.x().whileTrue(s_Intake.getIntake(-0.5));
-
-        driver.b().whileTrue(s_Shooter.getShooter(-0.8));
-        driver.y().whileTrue(s_Shooter.getShooter(0.8));
-
+        //robot shoot
+        driver.a().whileTrue(new ParallelCommandGroup(
+            s_Intake.getIntake(1.0),
+            s_Shooter.getShooter(-0.8)
+        ));
+        
+        //Robot feed
+        driver.b().whileTrue(new ParallelCommandGroup(
+            s_Intake.getIntake(1.0),
+            s_Shooter.getShooter(0.8)
+        ));
     }
 
         public Command getAutonomousCommand() {
