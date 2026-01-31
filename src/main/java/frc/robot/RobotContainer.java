@@ -4,12 +4,13 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+
 import frc.robot.subsystems.Blower;
 import frc.robot.subsystems.Swerve;
-
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.Spin_blow_motor;
-
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
 
 public class RobotContainer {
 
@@ -20,7 +21,8 @@ public class RobotContainer {
     // Subsystems
     private final Swerve s_Swerve = Swerve.getInstance();
     private final Blower s_Blower = Blower.getInstance();
-
+    private final Intake s_Intake = Intake.getInstance();
+    private final Shooter s_Shooter = Shooter.getInstance();
 
 
     
@@ -59,6 +61,10 @@ public class RobotContainer {
         driver.leftBumper().onFalse(new InstantCommand(() -> s_Swerve.isSlowMode = false));
 
         driver.x().onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
+
+        driver.a().whileTrue(new InstantCommand(() -> s_Intake.getIntake()));
+
+        driver.b().whileTrue(new InstantCommand(() -> s_Shooter.getShooter()));
 
     }
 
