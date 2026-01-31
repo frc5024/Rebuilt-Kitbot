@@ -15,14 +15,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class ShooterCmd extends Command {
 
   private final Shooter m_shooter;
-  double speed = 0.5;
+  double m_speed = 0.0;
   /**
    * Creates a new ShooterCmd .
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ShooterCmd(Shooter subsystem) {
+  public ShooterCmd(Shooter subsystem, double speed) {
     m_shooter = subsystem;
+    m_speed = speed;
 
     // Use addRequirements() here to declare subsystem dependencies.
 
@@ -32,7 +33,8 @@ public class ShooterCmd extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_shooter.setMotorPower(speed);
+    m_shooter.setMotorPower(m_speed);
+    System.out.println("Shooter command running");
   }
 
   // Called every time the scheduler runs while the command is scheduled.

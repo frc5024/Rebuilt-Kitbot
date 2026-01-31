@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 /** An example command that uses an example subsystem. */
 public class IntakeCmd extends Command {
   private final Intake m_intake;
-  double speed = 0.5;
+  double m_speed = 0.0;
   /**
 
   /**
@@ -22,8 +22,9 @@ public class IntakeCmd extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public IntakeCmd(Intake subsystem) {
+  public IntakeCmd(Intake subsystem, double speed) {
     m_intake = subsystem;
+    m_speed = speed;
 
     // Use addRequirements() here to declare subsystem dependencies.
 
@@ -33,7 +34,8 @@ public class IntakeCmd extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_intake.setMotorPower(speed);
+    m_intake.setMotorPower(m_speed);
+    System.out.println("Intake command running");
   }
 
 

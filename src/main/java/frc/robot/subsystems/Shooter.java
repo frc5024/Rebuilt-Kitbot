@@ -19,6 +19,7 @@ public class Shooter extends SubsystemBase {
   private SparkMax ShooterMotor = new SparkMax(motorID, MotorType.kBrushed);      
 
   public static final Shooter getInstance() {
+    System.out.println("Shooter defined");
     if (mInstance == null) {
       mInstance = new Shooter();
     }
@@ -27,12 +28,12 @@ public class Shooter extends SubsystemBase {
 
     
   public void setMotorPower(double speed) {
-    ShooterMotor.set(speed);
+    ShooterMotor.set(-speed);
   }
 
-  public Command getShooter() {
+  public Command getShooter(double speed) {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return new ShooterCmd(this);
+    return new ShooterCmd(this, speed);
   }
 }

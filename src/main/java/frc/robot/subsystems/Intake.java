@@ -14,11 +14,12 @@ import frc.robot.commands.IntakeCmd;
 public class Intake extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   private static Intake mInstance; 
-  private int motor1ID = 61;
+  private int motor1ID = 45;
 
   private SparkMax IntakeMotor1 = new SparkMax(motor1ID, MotorType.kBrushed);
 
   public static final Intake getInstance() {
+    System.out.println("Intake defined");
     if (mInstance == null) {
       mInstance = new Intake();
     }
@@ -27,12 +28,12 @@ public class Intake extends SubsystemBase {
 
     
   public void setMotorPower(double speed) {
-    IntakeMotor1.set(speed);
+    IntakeMotor1.set(-speed);
   }
 
-  public Command getIntake() {
+  public Command getIntake(double speed) {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return new IntakeCmd(this);
+    return new IntakeCmd(this, speed);
   }    
 }

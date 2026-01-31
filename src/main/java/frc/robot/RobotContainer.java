@@ -20,7 +20,7 @@ public class RobotContainer {
 
     // Subsystems
     private final Swerve s_Swerve = Swerve.getInstance();
-    private final Blower s_Blower = Blower.getInstance();
+    //private final Blower s_Blower = Blower.getInstance();
     private final Intake s_Intake = Intake.getInstance();
     private final Shooter s_Shooter = Shooter.getInstance();
 
@@ -46,7 +46,7 @@ public class RobotContainer {
                                                                                                          // robotcentric
         ));
 
-        s_Blower.setDefaultCommand(new Spin_blow_motor(s_Blower, () -> -operator.getRawAxis(translationAxis)));
+        //s_Blower.setDefaultCommand(new Spin_blow_motor(s_Blower, () -> -operator.getRawAxis(translationAxis)));
 
         configureBindings();
     }
@@ -60,11 +60,13 @@ public class RobotContainer {
         driver.leftBumper().whileTrue(new InstantCommand(() -> s_Swerve.isSlowMode = true));
         driver.leftBumper().onFalse(new InstantCommand(() -> s_Swerve.isSlowMode = false));
 
-        driver.x().onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
+        //driver.x().onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
 
-        driver.a().whileTrue(new InstantCommand(() -> s_Intake.getIntake()));
+        driver.a().whileTrue(s_Intake.getIntake(1.0));
+        driver.x().whileTrue(s_Intake.getIntake(-0.5));
 
-        driver.b().whileTrue(new InstantCommand(() -> s_Shooter.getShooter()));
+        driver.b().whileTrue(s_Shooter.getShooter(-0.8));
+        driver.y().whileTrue(s_Shooter.getShooter(0.8));
 
     }
 
