@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "drive 1 meter"
+            "pathName": "Kitbot Rebuilt"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Testing only",
+  "folder": null,
   "choreoAuto": false
 }

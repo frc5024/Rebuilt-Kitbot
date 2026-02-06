@@ -2,7 +2,9 @@
   "robotWidth": 0.86,
   "robotLength": 0.86,
   "holonomicMode": true,
-  "pathFolders": [],
+  "pathFolders": [
+    "Stuff to mess around with"
+  ],
   "autoFolders": [
     "Testing only",
     "Non Processor",
@@ -13,7 +15,7 @@
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
   "defaultNominalVoltage": 12.0,
-  "robotMass": 59.42,
+  "robotMass": 60.0,
   "robotMOI": 7.4,
   "robotTrackwidth": 0.546,
   "driveWheelRadius": 0.049,

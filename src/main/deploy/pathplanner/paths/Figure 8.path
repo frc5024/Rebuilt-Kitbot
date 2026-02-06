@@ -3,25 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.4265368852459013,
-        "y": 0.51859631147541
+        "x": 2.530522222222223,
+        "y": 2.8169444444444447
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9180327868852456,
-        "y": 0.9261782786885242
+        "x": 4.372222222222223,
+        "y": 2.8169444444444447
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.3925204918032783,
-        "y": 2.3407274590163936
+        "x": 2.423333333333334,
+        "y": 6.305455555555555
       },
       "prevControl": {
-        "x": 3.190919242839352,
-        "y": 2.1928865431095144
+        "x": 0.7767734385421987,
+        "y": 6.173378558647174
+      },
+      "nextControl": {
+        "x": 4.245544444444445,
+        "y": 6.4516222222222215
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.530522222222223,
+        "y": 2.8169444444444447
+      },
+      "prevControl": {
+        "x": 0.8057555555555553,
+        "y": 2.943622222222221
       },
       "nextControl": null,
       "isLocked": false,
@@ -41,14 +57,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 1.0,
-    "rotation": 59.99999999999999
+    "velocity": 0,
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Stuff to mess around with",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 53.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }
