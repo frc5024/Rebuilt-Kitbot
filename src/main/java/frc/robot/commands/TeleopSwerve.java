@@ -1,3 +1,5 @@
+// copied from a template
+
 package frc.robot.commands;
 
 import java.util.function.BooleanSupplier;
@@ -11,16 +13,23 @@ import frc.robot.subsystems.Swerve;
 
 public class TeleopSwerve extends Command {
     private Swerve s_Swerve;
-    private DoubleSupplier translationSup;
+    private DoubleSupplier translationSup; 
     private DoubleSupplier strafeSup;
-    private DoubleSupplier rotationSup;
+    private DoubleSupplier rotationSup;   
     private SlewRateLimiter translationFilter = new SlewRateLimiter(5);
     private SlewRateLimiter strafeFilter = new SlewRateLimiter(5);
     private SlewRateLimiter rotationFilter = new SlewRateLimiter(5);
     private BooleanSupplier robotCentricSup;
 
-    public TeleopSwerve(Swerve s_Swerve, DoubleSupplier translationSup, DoubleSupplier strafeSup,
-            DoubleSupplier rotationSup, BooleanSupplier robotCentricSup) {
+    public TeleopSwerve(
+        Swerve s_Swerve, 
+        DoubleSupplier translationSup, 
+        DoubleSupplier strafeSup,
+        DoubleSupplier rotationSup,
+        BooleanSupplier robotCentricSup
+    ) 
+        
+    {   
         this.s_Swerve = s_Swerve;
         addRequirements(s_Swerve);
 
@@ -30,9 +39,13 @@ public class TeleopSwerve extends Command {
         this.robotCentricSup = robotCentricSup;
     }
 
+
+    /* Do this when called */
+
     @Override
     public void execute() {
         /* Get Values, Deadband */
+        //Got values form Swerve subsystem
         double translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.stickDeadband);
         double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.stickDeadband);
         double rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.stickDeadband);
@@ -50,3 +63,4 @@ public class TeleopSwerve extends Command {
         s_Swerve.drive(true);
     }
 }
+

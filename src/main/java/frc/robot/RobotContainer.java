@@ -73,35 +73,32 @@ public class RobotContainer {
         SmartDashboard.putData("Auto Options", autoChooser);
     }
 
+
     // Driver Controls
     private void configureBindings() {
+
         // Driver Controls
-        // Drive
-        
+        driver.x().onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
 
-        driver.leftBumper().whileTrue(new InstantCommand(() -> s_Swerve.isSlowMode = true));
-        driver.leftBumper().onFalse(new InstantCommand(() -> s_Swerve.isSlowMode = false));
-
-        //driver.x().onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
-
-        //robot shoot
+        //robot Shooting
         driver.a().whileTrue(new ParallelCommandGroup(
-            s_Intake.getIntake(1.0),
-            s_Shooter.getShooter(-0.9)
+            /* The "shooter" is hybrid of intake and shooting */
+            /* While the "intaker" is an idexer and also a shooter */
+            s_Intake.getIntake(Constants.Intake.intakeSpeed),
+            s_Shooter.getShooter(Constants.Shooter.shootSpeed)
         ));
         
-        //Robot feed
+        //Robot Intaking
         driver.b().whileTrue(new ParallelCommandGroup(
-            s_Intake.getIntake(1.0),
-            s_Shooter.getShooter(0.7)
+            s_Intake.getIntake(Constants.Intake.intakeSpeed),
+            s_Shooter.getShooter(Constants.Shooter.indexSpeed)
         ));
- 
-
-        //driver.a().whileTrue(s_Intake.getIntake(1.0));
-        //driver.x().whileTrue(s_Shooter.getIntake(-0.5));
-
-        //driver.b().whileTrue(s_Shooter.getShooter(-0.8));
-        //driver.y().whileTrue(s_Shooter.getShooter(0.8));
+         
+        //Unjam funtion, use in emergency!
+        driver.leftTrigger().whileTrue(new ParallelCommandGroup(
+            s_Shooter.getShooter(Constants.Intake.reverseSpeed),
+            s_Intake.getIntake(Constants.Shooter.shootSpeed)
+        ));
     }
 
     public Command getAutonomousCommand() {

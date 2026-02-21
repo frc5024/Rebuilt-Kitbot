@@ -1,6 +1,14 @@
+// Based off of https://github.com/HoltRobotics/BaseFalconSwerve/ but using a navX instead of a pigeon
+/* PID: 
+P: Proportional; "I want to go over there please waiter, also at ____ speed since i enjoy the view" 
+I: Intergal; "Im alowed to move this much?! Are you mad?!"
+D: Derivertive; Slows you down the closer you are to the target
+*/
+
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
@@ -13,9 +21,11 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.Constants;
 import frc.robot.SwerveModule;
 
@@ -23,7 +33,6 @@ public class Swerve extends SubsystemBase {
 
     public SwerveDriveOdometry swerveOdometry;
     public SwerveModule[] mSwerveMods;
-    public double speedModifier;
     public AHRS gyro;
 
     double translationVal = 0;
@@ -34,15 +43,7 @@ public class Swerve extends SubsystemBase {
     boolean lockStrafe = false;
     boolean lockTranslation = false;
 
-    boolean fieldRelative = true;
-
-    public boolean isSlowMode = false;
-
-    // Change this to change if its in baby mode (30% speed)
-    public boolean babyMode = true;
-
-    public final double scaleValue = 3600.0 / 3831.020004272461;
-
+    // Singleton
     private static Swerve mInstance;
 
     public static Swerve getInstance() {
@@ -52,11 +53,10 @@ public class Swerve extends SubsystemBase {
         return mInstance;
     }
 
+
     private Swerve() {
         gyro = new AHRS(SPI.Port.kMXP);
         gyro.zeroYaw();
-
-        speedModifier = 1;
 
         mSwerveMods = new SwerveModule[] {
                 new SwerveModule(0, Constants.Swerve.Mod0.constants),
@@ -75,26 +75,24 @@ public class Swerve extends SubsystemBase {
             // Handle exception as needed
             
 
-
+        // Required to access the robot in PathPlanner
         AutoBuilder.configure(
-                this::getPose, // Robot pose supplier
-                this::setPose, // Method to reset odometry (will be called if your auto has a starting pose)
-                this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT
-                                                                      // RELATIVE ChassisSpeeds. Also optionally outputs
-                                                                      // individual module feedforwards
-                new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for
-                                                // holonomic drive trains
-                        new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-                        new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
-                ),
+            this::getPose, // Robot pose supplier
+            this::setPose, // Method to reset odometry (will be called if your auto has a starting pose)
+            this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+            (speeds, feedforwards) -> driveRobotRelative(speeds),/* Method that will drive the robot given ROBOT RELATIVE 
+                                                                    ChassisSpeeds. Also optionally outputs individual module 
+                                                                    feedforwards */
+            new PPHolonomicDriveController(/* PPHolonomicController is 
+                                              the built in path following controller for holonomic drive trains */
+            new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+            new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants 
+            ),
                 config, // The robot configuration
                 () -> {
-                    // Boolean supplier that controls when the path will be mirrored for the red
-                    // alliance
+                    // Boolean supplier that controls when the path will be mirrored for the red alliance
                     // This will flip the path being followed to the red side of the field.
                     // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
                     var alliance = DriverStation.getAlliance();
                     if (alliance.isPresent()) {
                         return alliance.get() == DriverStation.Alliance.Red;
@@ -105,32 +103,7 @@ public class Swerve extends SubsystemBase {
         );
     }
 
-        
-
-    // takes priority over controller input - call lockController to remove
-    // controller access to movement value
-    public void visionTranslationalVal(double translationSpeed, boolean lockController) {
-        if (lockController) {
-            translationVal = translationSpeed;
-        }
-        lockTranslation = lockController;
-    }
-
-    public void visionRotationVal(double rotationSpeed, boolean lockController) {
-        if (lockController) {
-            rotationVal = rotationSpeed;
-        }
-        lockRotation = lockController;
-    }
-
-    public void visionStrafeVal(double strafeSpeed, boolean lockController) {
-        if (lockController) {
-            strafeVal = strafeSpeed;
-        }
-        lockStrafe = lockController;
-    }
-
-    // Controller called values - only call when lockController isnt true
+    // Controller called values - only call when Robot is not locked
     public void controllerTranslationalVal(double translationOutput) {
         if (!lockTranslation) {
             translationVal = translationOutput;
@@ -149,64 +122,35 @@ public class Swerve extends SubsystemBase {
         }
     }
 
-    public void setFieldRelative(boolean isFieldRelative) {
-        fieldRelative = isFieldRelative;
-    }
-
-    public boolean getFieldRelative() {
-        return fieldRelative;
-    }
-
-    public void setSpeedModifier() {
-        speedModifier = 1;
-
-        if (babyMode) {
-            speedModifier = 0.3;
-        }
-        // This is why were not going the right distance in auto
-        // speedModifier = speedModifier - elevatorSubsystem.getElevatorPercent();
-
-        if (isSlowMode) {
-            speedModifier = 0.3 * speedModifier;
-        }
-    }
-
-    /**
-     * 
+    /*
+     * Set desired ChassisSpeed, then call to apply this ChassisSpeed
      */
     public void drive(boolean isOpenLoop) {
         ChassisSpeeds chassisSpeeds = null;
 
-        setSpeedModifier();
+        double xVelocity = translationVal * Constants.Swerve.maxSpeed;
+        double yVelocity = strafeVal * Constants.Swerve.maxSpeed;
+        double rVelocity = rotationVal * Constants.Swerve.maxAngularVelocity;
 
-        double xVelocity = translationVal * Constants.Swerve.maxSpeed * speedModifier;
-        double yVelocity = strafeVal * Constants.Swerve.maxSpeed * speedModifier;
-        double rVelocity = rotationVal * Constants.Swerve.maxAngularVelocity * speedModifier;
-
-        if (fieldRelative) {
-            chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xVelocity, yVelocity, rVelocity, getGyroYaw());
-        } else {
-            chassisSpeeds = new ChassisSpeeds(
-                    translationVal * Constants.Swerve.maxSpeed * speedModifier,
-                    strafeVal * Constants.Swerve.maxSpeed * speedModifier,
-                    rotationVal * Constants.Swerve.maxAngularVelocity * speedModifier);
-        }
-
+        chassisSpeeds = new ChassisSpeeds(
+            xVelocity,
+            yVelocity,
+            rVelocity
+        );
         drive(chassisSpeeds, isOpenLoop);
-
     }
 
     /**
-     * 
+     * Apply ChassisSpeed from above method: drive(boolean isOpenLoop)
      */
     public void drive(ChassisSpeeds chassisSpeeds, boolean isOpenLoop) {
         SwerveModuleState[] swerveModuleStates = Constants.Swerve.swerveKinematics.toSwerveModuleStates(chassisSpeeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxSpeed);
 
+        // Apply speed to each SwerveModule
         for (SwerveModule mod : mSwerveMods) {
             mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
         }
-
     }
 
     /* Used by SwerveControllerCommand in Auto */
@@ -257,23 +201,17 @@ public class Swerve extends SubsystemBase {
     }
 
     public void setHeading(Rotation2d heading) {
-        swerveOdometry.resetPosition(getGyroYaw(), getModulePositions(),
-                new Pose2d(getPose().getTranslation(), heading));
+        swerveOdometry.resetPosition(getGyroYaw(),
+        getModulePositions(),
+        new Pose2d(getPose().getTranslation(),heading));
     }
-
-    // public void zeroHeading() {
-    // swerveOdometry.resetPosition(getGyroYaw(), getModulePositions(),
-    // new Pose2d(getPose().getTranslation(), new Rotation2d()));
-    // }
 
     public void zeroHeading() {
         gyro.reset();
     }
 
     public Rotation2d getGyroYaw() {
-        // return Rotation2d.fromDegrees(-gyro.getYaw());
-        // return Rotation2d.fromDegrees(gyro.getAngle() * scaleValue);
-        double angle = (gyro.getAngle() * scaleValue) % 360.0;
+        double angle = (gyro.getAngle()) % 360.0;
         if (angle > 180) {
             angle = angle - 360;
         }
@@ -281,7 +219,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public Rotation2d getGyroYaw360() {
-        double angle = (gyro.getAngle() * scaleValue) % 360.0;
+        double angle = (gyro.getAngle()) % 360.0;
         return Rotation2d.fromDegrees(-angle);
     }
 

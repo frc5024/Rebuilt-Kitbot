@@ -135,5 +135,18 @@ public final class Constants {
             public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
                     canCoderID, angleOffset);
         }
-    }
+        }
+        
+        public static final class Shooter{
+                public static final int motorID = 60;
+                public static final double indexSpeed =  0.8;
+                public static final double shootSpeed = -(indexSpeed);
+
+        }
+
+        public static final class Intake{
+                public static final int motorID = 45;
+                public static final double intakeSpeed = 1.0;
+                public static final double reverseSpeed = -(intakeSpeed);
+        }
 }

@@ -11,40 +11,34 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 
 
-/** An example command that uses an example subsystem. */
 public class IntakeCmd extends Command {
+
+  //creating a new hybrid command
   private final Intake m_intake;
   double m_speed = 0.0;
-  /**
-
-  /**
-   * Creates a new IntakeCmd .
-   *
-   * @param subsystem The subsystem used by this command.
-   */
+  
+  //Creates a new intake command (and a speed variable) 
   public IntakeCmd(Intake subsystem, double speed) {
     m_intake = subsystem;
     m_speed = speed;
 
-    // Use addRequirements() here to declare subsystem dependencies.
-
     addRequirements(subsystem);
   }
 
-  // Called when the command is initially scheduled.
+  // Start when the command is called.
   @Override
   public void initialize() {
     m_intake.setMotorPower(m_speed);
-    System.out.println("Intake command running");
   }
 
 
-  // Called every time the scheduler runs while the command is scheduled.
+  // Start every time the caller runs while the command is called.
   @Override
   public void execute() {
   }
     
 // Called once the command ends or is interrupted.
+// Stop motor
   @Override
   public void end(boolean interrupted) {
     m_intake.setMotorPower(0);

@@ -7,19 +7,16 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.ShooterCmd;
+import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
-  /** Creates a new ExampleSubsystem. */
-  private static Shooter mInstance; 
-  private int motorID = 60;
-  private SparkMax ShooterMotor = new SparkMax(motorID, MotorType.kBrushed);      
+  private static Shooter mInstance;
+  private SparkMax ShooterMotor = new SparkMax(Constants.Shooter.motorID, MotorType.kBrushed);      
 
   public static final Shooter getInstance() {
-    System.out.println("Shooter defined");
     if (mInstance == null) {
       mInstance = new Shooter();
     }

@@ -1,47 +1,34 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+//Quite litterally copied from my old codes
 
 package frc.robot.commands;
-
+ 
 import frc.robot.subsystems.Shooter;
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 
 
-/** An example command that uses an example subsystem. */
 public class ShooterCmd extends Command {
 
   private final Shooter m_shooter;
   double m_speed = 0.0;
-  /**
-   * Creates a new ShooterCmd .
-   *
-   * @param subsystem The subsystem used by this command.
-   */
+
+
+  //Creats a shooter cmd if none exist
   public ShooterCmd(Shooter subsystem, double speed) {
     m_shooter = subsystem;
     m_speed = speed;
 
-    // Use addRequirements() here to declare subsystem dependencies.
-
     addRequirements(subsystem);
   }
 
-  // Called when the command is initially scheduled.
+  // Use when the command is initially called for.
   @Override
   public void initialize() {
     m_shooter.setMotorPower(m_speed);
-    System.out.println("Shooter command running");
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
+  // Start every time the caller runs while the command is called.
   @Override
-  public void execute() {
-    
-    }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
